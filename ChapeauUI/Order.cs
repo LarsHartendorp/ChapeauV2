@@ -18,13 +18,15 @@ namespace ChapeauUI
         private List<OrderGerecht> selectedItems;
         private Employee employee;
         private Table table;
-
+        private List<MenuItem> menuitems;
+        private MenuItemService menuItemService;
         public Order(Table TableId, Employee employee) 
 
         {
             this.table = TableId;
             this.employee = employee;
             InitializeComponent();
+
             
         }
 
@@ -37,9 +39,9 @@ namespace ChapeauUI
             panelVerwijderenBestelling.Visible = false;
             listViewGerechten.View = View.Details;
             listViewGerechten.FullRowSelect = true;
-            listViewGerechten.Columns.Add("ID", 100);
-            listViewGerechten.Columns.Add("Name", 100);
-            listViewGerechten.Columns.Add("Price", 100);
+            listViewGerechten.Columns.Add("ID", 30);
+            listViewGerechten.Columns.Add("Name", 190);
+            listViewGerechten.Columns.Add("Price", 80);
             listViewGerechten.Columns.Add("Stock", 100);
             listViewGerechten.Columns.Add("Alcoholic", 100);
         }
@@ -48,22 +50,13 @@ namespace ChapeauUI
         {
             listViewGerechten.Items.Clear();
             labelTypeGerecht.Text = "Voorgerecht";
-            MenuItemService menuItemService = new MenuItemService();
-            List<MenuItem>orderedItems = menuItemService.GetAllMenuItems();
+            menuItemService = new MenuItemService();
+            
             panelBestellen.Visible = true;
-            foreach (MenuItem m in orderedItems)
-            {
-                if (m.Type == TypeOfProduct.Voorgerecht)
-                {
-                    ListViewItem listViewItem = new ListViewItem(m.ProductId.ToString());
-                    listViewItem.SubItems.Add(m.ProductName);
-                    listViewItem.SubItems.Add(m.Price.ToString());
-                    listViewItem.SubItems.Add(m.Stock.ToString());
-                    listViewItem.SubItems.Add(m.IsAlcoholic.ToString());
-                    listViewItem.Tag = m;
-                    listViewGerechten.Items.Add(listViewItem);
-                }
-            }
+            
+            menuitems = menuItemService.GetAllMenuItems(0);
+            
+            AddItem(menuitems);
         }
 
         private void buttonHoofdgerecht_Click(object sender, EventArgs e)
@@ -72,22 +65,11 @@ namespace ChapeauUI
             listViewGerechten.Items.Clear();
             panelBestellen.Visible = true;
             labelTypeGerecht.Text = "Hoofdgerecht";
-            MenuItemService menuItemService = new MenuItemService();
-            List<MenuItem> orderedItems = menuItemService.GetAllMenuItems();
-  
-            foreach (MenuItem m in orderedItems)
-            {
-                if (m.Type == TypeOfProduct.Hoofdgerecht)
-                {
-                    ListViewItem listViewItem = new ListViewItem(m.ProductId.ToString());
-                    listViewItem.SubItems.Add(m.ProductName);
-                    listViewItem.SubItems.Add(m.Price.ToString());
-                    listViewItem.SubItems.Add(m.Stock.ToString());
-                    listViewItem.SubItems.Add(m.IsAlcoholic.ToString());
-                    listViewItem.Tag = m;
-                    listViewGerechten.Items.Add(listViewItem);
-                }
-            }
+            menuItemService = new MenuItemService();
+            
+                menuitems = menuItemService.GetAllMenuItems(1);
+            
+            AddItem(menuitems);
         }
 
         private void buttonNagerecht_Click(object sender, EventArgs e)
@@ -96,52 +78,44 @@ namespace ChapeauUI
             listViewGerechten.Items.Clear();
             panelBestellen.Visible = true;
             labelTypeGerecht.Text = "Nagerecht";
-            MenuItemService menuItemService = new MenuItemService();
-            List<MenuItem> orderedItems = menuItemService.GetAllMenuItems();
-      
-            foreach (MenuItem m in orderedItems)
-            {
-                if (m.Type == TypeOfProduct.Nagerecht)
-                {
-                    ListViewItem listViewItem = new ListViewItem(m.ProductId.ToString());
-                    listViewItem.SubItems.Add(m.ProductName);
-                    listViewItem.SubItems.Add(m.Price.ToString());
-                    listViewItem.SubItems.Add(m.Stock.ToString());
-                    listViewItem.SubItems.Add(m.IsAlcoholic.ToString());
-                    listViewItem.Tag = m;
-                    listViewGerechten.Items.Add(listViewItem);
-                }
-            }
+            menuItemService = new MenuItemService();
+            
+                menuitems = menuItemService.GetAllMenuItems(2);
+            
+            AddItem(menuitems);
         }
+
+       
+
+        
 
         private void buttonDrankjes_Click(object sender, EventArgs e)
         {
             listViewGerechten.Items.Clear();
             panelBestellen.Visible = true;
             labelTypeGerecht.Text = "Drankjes";
-            MenuItemService menuItemService = new MenuItemService();
-            List<MenuItem> orderedItems = menuItemService.GetAllMenuItems();
-         
-            foreach (MenuItem m in orderedItems)
-            {
-                if (m.Type == TypeOfProduct.Drinken)
-                {
-                    ListViewItem listViewItem = new ListViewItem(m.ProductId.ToString());
-                    listViewItem.SubItems.Add(m.ProductName);
-                    listViewItem.SubItems.Add(m.Price.ToString());
-                    if (m.Stock < 10)
-                    {
-                        listViewItem.BackColor = Color.OrangeRed;
-                    }
-                    listViewItem.SubItems.Add(m.Stock.ToString());
-                    listViewItem.SubItems.Add(m.IsAlcoholic.ToString());
-                    listViewItem.Tag = m;
-                    listViewGerechten.Items.Add(listViewItem);
-                }
-            }
+            menuItemService = new MenuItemService();
+            menuitems = menuItemService.GetAllMenuItems(3);
+            AddItem(menuitems);
         }
 
-
+        private void AddItem(List<MenuItem> menuItems)
+        {
+            foreach (MenuItem m in menuitems)
+            {
+                ListViewItem listViewItem = new ListViewItem(m.ProductId.ToString());
+                listViewItem.SubItems.Add(m.ProductName);
+                listViewItem.SubItems.Add(m.Price.ToString());
+                if (m.Stock < 10)
+                {
+                    listViewItem.BackColor = Color.OrangeRed;
+                }
+                listViewItem.SubItems.Add(m.Stock.ToString());
+                listViewItem.SubItems.Add(m.IsAlcoholic.ToString());
+                listViewItem.Tag = m;
+                listViewGerechten.Items.Add(listViewItem);
+            }
+        }
 
         private void buttonTerug_Click(object sender, EventArgs e)
         {
@@ -192,6 +166,11 @@ namespace ChapeauUI
                 labelErrorMessage.ForeColor = Color.Red;
                 labelErrorMessage.Text = "Aantal kan niet onder de 1 zijn.";
             }
+            if (amount > int.Parse(listViewGerechten.SelectedItems[0].SubItems[3].Text)) 
+            {
+                labelErrorMessage.ForeColor = Color.Red;
+                labelErrorMessage.Text = $"Niet genoeg voorraad, voorraad: {int.Parse(listViewGerechten.SelectedItems[0].SubItems[3].Text)}";
+            }
             else
             {
                 OrderGerecht gerecht = new OrderGerecht();
@@ -205,7 +184,7 @@ namespace ChapeauUI
                 }
                 panelItemSelected.Visible = false;
                 textBoxRemark.Clear();
-                RefreshListView(selectedItems);
+                RefreshListView();
             }
         }
 
@@ -214,55 +193,81 @@ namespace ChapeauUI
             panelViewOrder.Visible = true;
             listViewViewOrder.View = View.Details;
             listViewViewOrder.FullRowSelect = true;
-            listViewViewOrder.Columns.Add("Id", 50);
+            listViewViewOrder.Columns.Add("Id", 30);
             listViewViewOrder.Columns.Add("Naam", 100);
-            listViewViewOrder.Columns.Add("Prijs", 100);
-            listViewViewOrder.Columns.Add("Alcoholisch", 100);
-            listViewViewOrder.Columns.Add("Opmerking", 200);
+            listViewViewOrder.Columns.Add("Prijs", 50);
+            listViewViewOrder.Columns.Add("Alcoholisch", 80);
+            listViewViewOrder.Columns.Add("Opmerking", 180);
+            listViewViewOrder.Columns.Add("Aantal", 70);
+            
             
         }
-        private void RefreshListView(List<OrderGerecht> selectedItems)
+        private void RefreshListView()
         {
-            MenuItemService menuItemService = new MenuItemService();
-            foreach (OrderGerecht O in selectedItems)
+            menuItemService = new MenuItemService();
+            foreach (KeyValuePair<OrderGerecht, int> item in GetItems())
             {
-                MenuItem menuItem = menuItemService.GetMenuItemsFromOrder(O.MenuItem);
-                ListViewItem item = new ListViewItem(menuItem.ProductId.ToString());
-                item.SubItems.Add(menuItem.ProductName);
-                item.SubItems.Add(menuItem.Price.ToString());
+                MenuItem menuItem = menuItemService.GetMenuItemsFromOrder(item.Key.MenuItem);
+                ListViewItem liItem = new ListViewItem(menuItem.ProductId.ToString());
+                liItem.SubItems.Add(menuItem.ProductName);
+                liItem.SubItems.Add(menuItem.Price.ToString());
                 if (menuItem.IsAlcoholic)
                 {
-                    item.SubItems.Add("Ja");
+                    liItem.SubItems.Add("Ja");
                 }
                 else
                 {
-                    item.SubItems.Add("nee");
+                    liItem.SubItems.Add("Nee");
                 }
-                item.SubItems.Add(O.Remark.ToString());
-                item.Tag = menuItem;
-                listViewViewOrder.Items.Add(item);
+                liItem.SubItems.Add(item.Key.Remark.ToString());
+                liItem.SubItems.Add(item.Value.ToString());
+                liItem.Tag = item.Key;
+                listViewViewOrder.Items.Add(liItem);
             }
+            
+        }
+
+        private Dictionary<OrderGerecht, int> GetItems()
+        {
+            Dictionary<OrderGerecht, int> items = new Dictionary<OrderGerecht, int>();
+            foreach (OrderGerecht gerecht in selectedItems)
+            {
+                if (items.ContainsKey(gerecht))
+                {
+                    items[gerecht]++;
+                }
+                else
+                {
+                    items.Add(gerecht, 1);
+                }
+            }
+            return items;
         }
 
         private void buttonPlus_Click(object sender, EventArgs e)
         {
             foreach (ListViewItem item in listViewViewOrder.SelectedItems)
             {
-                listViewViewOrder.Items.Add((ListViewItem)item.Clone());
+                int newAmount = int.Parse(listViewViewOrder.SelectedItems[0].SubItems[5].Text) + 1;
+                listViewViewOrder.Items[listViewViewOrder.SelectedItems[0].Index].SubItems[5].Text = $"{newAmount}";
             }   
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            panelViewOrder.Visible = false;
-            labelNoItems.Text = "";
-        }
+        
 
         private void buttonMinus_Click(object sender, EventArgs e)
         {
             foreach (ListViewItem item in listViewViewOrder.SelectedItems)
             {
-                listViewViewOrder.Items.Remove(listViewViewOrder.SelectedItems[0]); 
+                int newAmount = int.Parse(listViewViewOrder.SelectedItems[0].SubItems[5].Text) - 1;
+                if (newAmount <= 0)
+                {
+                    listViewViewOrder.Items.Remove(listViewViewOrder.SelectedItems[0]); 
+                }
+                else
+                {
+                    listViewViewOrder.Items[listViewViewOrder.SelectedItems[0].Index].SubItems[5].Text = $"{newAmount}";
+                }
             }
            
         }
@@ -276,7 +281,7 @@ namespace ChapeauUI
             {
                 OrderGerecht o = new OrderGerecht();
                 o.OrderId = orderService.GetCurrentOrder(table).OrderId;
-                o.MenuItem = (MenuItem)item.Tag;
+                o.MenuItem = ((OrderGerecht)item.Tag).MenuItem;
                 o.TimeOfOrder = DateTime.Now;
                 o.Remark = item.SubItems[4].Text;
                 o.IsServed = 0;
@@ -297,15 +302,19 @@ namespace ChapeauUI
                 labelBesteld.Text = "Besteld!";
                 OrderGerechtService orderGerechtService = new OrderGerechtService();
                 selectedItems = GetItemsFromListView();
-                MenuItemService menuItemService = new MenuItemService();
-                foreach (OrderGerecht orderGerecht in selectedItems)
+                menuItemService = new MenuItemService();
+                int index = 0;
+                foreach (KeyValuePair<OrderGerecht, int> item in GetItems())
                 {
-                    orderGerechtService.InsertOrderGerecht(orderGerecht);
-                    menuItemService.UpdateMenuItem(orderGerecht);
+                    for (int i = 0; i < int.Parse(listViewViewOrder.Items[index].SubItems[5].Text); i++)
+                    {
+                        orderGerechtService.InsertOrderGerecht(item.Key);
+                        menuItemService.UpdateMenuItem(item.Key);
+                    }
+                    index++;
                 }
                 listViewViewOrder.Clear();
                 panelOrdered.Visible = true;
-                this.Close();
             }
         }
 
@@ -346,6 +355,12 @@ namespace ChapeauUI
         private void buttonOrderedOk_Click(object sender, EventArgs e)
         {
             panelOrdered.Visible = false;
+        }
+
+        private void buttonTerugSelectedItems_Click(object sender, EventArgs e)
+        {
+            panelViewOrder.Visible = false;
+            labelNoItems.Text = "";
         }
     }
 }

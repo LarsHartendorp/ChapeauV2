@@ -48,8 +48,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.listViewGerechten = new System.Windows.Forms.ListView();
             this.labelTypeGerecht = new System.Windows.Forms.Label();
-            this.labelZoeken = new System.Windows.Forms.Label();
-            this.textBoxZoeken = new System.Windows.Forms.TextBox();
             this.buttonTerugBestelling = new System.Windows.Forms.Button();
             this.panelViewOrder = new System.Windows.Forms.Panel();
             this.labelNoItems = new System.Windows.Forms.Label();
@@ -65,7 +63,7 @@
             this.textBoxComment = new System.Windows.Forms.TextBox();
             this.buttonPlus = new System.Windows.Forms.Button();
             this.buttonMinus = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonTerugSelectedItems = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.panelOrdered = new System.Windows.Forms.Panel();
             this.labelBesteld = new System.Windows.Forms.Label();
@@ -153,10 +151,9 @@
             // panelBestellen
             // 
             this.panelBestellen.Controls.Add(this.panelItemSelected);
+            this.panelBestellen.Controls.Add(this.panelViewOrder);
             this.panelBestellen.Controls.Add(this.listViewGerechten);
             this.panelBestellen.Controls.Add(this.labelTypeGerecht);
-            this.panelBestellen.Controls.Add(this.labelZoeken);
-            this.panelBestellen.Controls.Add(this.textBoxZoeken);
             this.panelBestellen.Controls.Add(this.buttonTerugBestelling);
             this.panelBestellen.Location = new System.Drawing.Point(1, 0);
             this.panelBestellen.Name = "panelBestellen";
@@ -278,10 +275,10 @@
             // listViewGerechten
             // 
             this.listViewGerechten.HideSelection = false;
-            this.listViewGerechten.Location = new System.Drawing.Point(12, 121);
+            this.listViewGerechten.Location = new System.Drawing.Point(12, 74);
             this.listViewGerechten.MultiSelect = false;
             this.listViewGerechten.Name = "listViewGerechten";
-            this.listViewGerechten.Size = new System.Drawing.Size(497, 508);
+            this.listViewGerechten.Size = new System.Drawing.Size(497, 555);
             this.listViewGerechten.TabIndex = 7;
             this.listViewGerechten.UseCompatibleStateImageBehavior = false;
             this.listViewGerechten.SelectedIndexChanged += new System.EventHandler(this.listViewGerechten_SelectedIndexChanged);
@@ -296,22 +293,6 @@
             this.labelTypeGerecht.Size = new System.Drawing.Size(147, 26);
             this.labelTypeGerecht.TabIndex = 6;
             this.labelTypeGerecht.Text = "Voorgerechten";
-            // 
-            // labelZoeken
-            // 
-            this.labelZoeken.AutoSize = true;
-            this.labelZoeken.Location = new System.Drawing.Point(14, 61);
-            this.labelZoeken.Name = "labelZoeken";
-            this.labelZoeken.Size = new System.Drawing.Size(49, 15);
-            this.labelZoeken.TabIndex = 5;
-            this.labelZoeken.Text = "Zoeken:";
-            // 
-            // textBoxZoeken
-            // 
-            this.textBoxZoeken.Location = new System.Drawing.Point(12, 81);
-            this.textBoxZoeken.Name = "textBoxZoeken";
-            this.textBoxZoeken.Size = new System.Drawing.Size(497, 23);
-            this.textBoxZoeken.TabIndex = 4;
             // 
             // buttonTerugBestelling
             // 
@@ -335,7 +316,7 @@
             this.panelViewOrder.Controls.Add(this.textBoxComment);
             this.panelViewOrder.Controls.Add(this.buttonPlus);
             this.panelViewOrder.Controls.Add(this.buttonMinus);
-            this.panelViewOrder.Controls.Add(this.button1);
+            this.panelViewOrder.Controls.Add(this.buttonTerugSelectedItems);
             this.panelViewOrder.Controls.Add(this.label4);
             this.panelViewOrder.Location = new System.Drawing.Point(0, 0);
             this.panelViewOrder.Name = "panelViewOrder";
@@ -474,15 +455,15 @@
             this.buttonMinus.UseVisualStyleBackColor = true;
             this.buttonMinus.Click += new System.EventHandler(this.buttonMinus_Click);
             // 
-            // button1
+            // buttonTerugSelectedItems
             // 
-            this.button1.Location = new System.Drawing.Point(13, 15);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(95, 27);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Terug";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonTerugSelectedItems.Location = new System.Drawing.Point(13, 15);
+            this.buttonTerugSelectedItems.Name = "buttonTerugSelectedItems";
+            this.buttonTerugSelectedItems.Size = new System.Drawing.Size(95, 27);
+            this.buttonTerugSelectedItems.TabIndex = 2;
+            this.buttonTerugSelectedItems.Text = "Terug";
+            this.buttonTerugSelectedItems.UseVisualStyleBackColor = true;
+            this.buttonTerugSelectedItems.Click += new System.EventHandler(this.buttonTerugSelectedItems_Click);
             // 
             // label4
             // 
@@ -539,7 +520,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(522, 640);
             this.Controls.Add(this.panelOrdered);
-            this.Controls.Add(this.panelViewOrder);
             this.Controls.Add(this.panelBestellen);
             this.Controls.Add(this.buttonDrankjes);
             this.Controls.Add(this.buttonViewOrder);
@@ -576,8 +556,6 @@
         private System.Windows.Forms.Button buttonBestel;
         private System.Windows.Forms.Panel panelBestellen;
         private System.Windows.Forms.Label labelTypeGerecht;
-        private System.Windows.Forms.Label labelZoeken;
-        private System.Windows.Forms.TextBox textBoxZoeken;
         private System.Windows.Forms.Button buttonTerugBestelling;
         private System.Windows.Forms.ListView listViewGerechten;
         private System.Windows.Forms.Panel panelItemSelected;
@@ -596,7 +574,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button buttonPlus;
         private System.Windows.Forms.Button buttonMinus;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonTerugSelectedItems;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ListView listViewViewOrder;
         private System.Windows.Forms.Label label5;
